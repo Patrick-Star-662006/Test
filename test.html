@@ -2,341 +2,256 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DigiDex</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Rubik:wght@400;500;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* Stops the page shifting when a scrollbar appears */
-        html {
-            overflow-y: scroll;
-        }
-
-        /* Keep the device the same size for every Digimon */
-        .lcd {
-            display: flex;
-            flex-direction: column;
-            height: 580px;
-            min-height: 0;
-        }
-
-        .desc {
-            flex: 1;
-            /* takes whatever height is left */
-            min-height: 0;
-            margin: 14px 0 0;
-            padding-right: 4px;
-            overflow-y: auto;
-            font-size: .85rem;
-            line-height: 1.5;
-
-            /* Firefox */
-            scrollbar-width: thin;
-            scrollbar-color: #2b3a28 rgba(43, 58, 40, .15);
-        }
-
-        /* Chrome, Edge, Safari: a slim, square LCD-style scrollbar */
-        .desc::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .desc::-webkit-scrollbar-track {
-            background: rgba(43, 58, 40, .15);
-            border-left: 1px solid rgba(43, 58, 40, .35);
-        }
-
-        .desc::-webkit-scrollbar-thumb {
-            background: #2b3a28;
-            border: 1px solid #b9c8a0;
-            /* gap so the thumb looks inset */
-            border-radius: 0;
-        }
-
-        .desc::-webkit-scrollbar-thumb:hover {
-            background: #1a2418;
-        }
-
-        .desc::-webkit-scrollbar-button {
-            display: none;
-            /* removes the arrow buttons */
-        }
-
-        #card {
-            display: flex;
-            flex: 1;
-            flex-direction: column;
-            min-height: 0;
-        }
-
-        /* Type / Attribute / Released rows */
-        .info {
-            margin: 14px 0 0;
-            padding: 0;
-        }
-
-        .info div {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 8px 0;
-            border-top: 1px dashed currentColor;
-            font-size: .95rem;
-        }
-
-        .info dt {
-            opacity: .7;
-        }
-
-        .info dd {
-            margin: 0;
-            text-align: right;
-        }
-
-        .btn:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DigiDex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Rubik:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+  <div class="page">
+    <header class="site-header">
+      <a class="portfolio-btn" href="#">&larr; Portfolio</a>
+      <div>
+        <p class="brand">DigiDex</p>
+        <p class="tagline">Your pocket guide to the Digital World</p>
+      </div>
+      <span aria-hidden="true"></span>
+    </header>
+
     <main class="device">
-        <div class="device-head">
-            <h1>DigiDex</h1>
-            <div class="led" id="led" aria-hidden="true"></div>
-        </div>
+      <div class="device-head">
+        <h1>DigiDex</h1>
+        <div class="led" id="led" aria-hidden="true"></div>
+      </div>
 
-        <form class="search" id="searchForm" autocomplete="off">
-            <input type="text" id="searchInput" aria-label="Digimon name or ID number"
-                placeholder="Name or ID, like Agumon or 1">
-            <button type="submit" class="btn">Scan</button>
-        </form>
+      <form class="search" id="searchForm" autocomplete="off">
+        <input type="text" id="searchInput" aria-label="Digimon name or ID number"
+          placeholder="Name or ID, like Agumon or 1">
+        <button type="submit" class="btn">Scan</button>
+      </form>
 
-        <div class="bezel">
-            <div class="lcd" aria-live="polite">
-                <div id="message" class="message">Loading...</div>
+      <div class="bezel">
+        <div class="lcd" aria-live="polite">
+          <div id="message" class="message">Loading...</div>
 
-                <div id="card" hidden>
-                    <div class="lcd-top">
-                        <span id="number"></span>
-                        <span id="level"></span>
-                    </div>
-                    <div class="portrait" id="portrait">
-                        <img id="image" alt="">
-                    </div>
-                    <dl class="info">
-                        <div>
-                            <dt>Type</dt>
-                            <dd id="type"></dd>
-                        </div>
-                        <div>
-                            <dt>Attribute</dt>
-                            <dd id="attribute"></dd>
-                        </div>
-                        <div>
-                            <dt>Released</dt>
-                            <dd id="release"></dd>
-                        </div>
-                    </dl>
-                    <p class="desc" id="desc"></p>
-                </div>
+          <div id="card" hidden>
+            <div class="lcd-top">
+              <span id="number"></span>
+              <span id="level"></span>
             </div>
+            <div class="portrait">
+              <img id="image" alt="">
+            </div>
+            <h2 id="name"></h2>
+            <dl class="info">
+              <div>
+                <dt>Type</dt>
+                <dd id="type"></dd>
+              </div>
+              <div>
+                <dt>Attribute</dt>
+                <dd id="attribute"></dd>
+              </div>
+              <div>
+                <dt>Released</dt>
+                <dd id="release"></dd>
+              </div>
+            </dl>
+            <p class="desc" id="desc"></p>
+          </div>
         </div>
+      </div>
 
-        <div class="browse">
-            <button type="button" class="btn" id="prev" aria-label="Previous Digimon" disabled>Previous</button>
-            <span class="count" id="count"></span>
-            <button type="button" class="btn" id="next" aria-label="Next Digimon">Next</button>
-        </div>
+      <div class="browse">
+        <button type="button" class="btn" id="prev" aria-label="Previous Digimon" disabled>Previous</button>
+        <span class="count" id="count"></span>
+        <button type="button" class="btn" id="next" aria-label="Next Digimon">Next</button>
+      </div>
     </main>
 
-    <script>
-        const API = 'https://digi-api.com/api/v1/digimon';
+    <footer class="site-footer">
+      <p>Data provided by <a href="https://digi-api.com" target="_blank" rel="noopener">Digi-API</a></p>
+      <p class="fine">Unofficial fan project. Digimon is &copy; Bandai / Toei Animation. &middot; <span
+          id="year"></span></p>
+    </footer>
+  </div>
 
-        var current = null; // the Digimon on screen
-        var token = 0;      // lets newer requests cancel older ones
+  <script>
+    const API = 'https://digi-api.com/api/v1/digimon';
+    const NETWORK_ERROR = 'Could not reach the Digimon API. Check your connection and try again.';
 
-        var elMessage = document.getElementById('message');
-        var elCard = document.getElementById('card');
-        var elNumber = document.getElementById('number');
-        var elLevel = document.getElementById('level');
-        var elPortrait = document.getElementById('portrait');
-        var elImage = document.getElementById('image');
-        var elType = document.getElementById('type');
-        var elAttribute = document.getElementById('attribute');
-        var elRelease = document.getElementById('release');
-        var elDesc = document.getElementById('desc');
-        var elCount = document.getElementById('count');
-        var elLed = document.getElementById('led');
-        var elInput = document.getElementById('searchInput');
-        var elPrev = document.getElementById('prev');
+    let current = null;
+    let token = 0;
 
-        // ---------- helpers ----------
+    const $ = (id) => document.getElementById(id);
+    const elMessage = $('message');
+    const elCard = $('card');
+    const elNumber = $('number');
+    const elLevel = $('level');
+    const elName = $('name');
+    const elImage = $('image');
+    const elType = $('type');
+    const elAttribute = $('attribute');
+    const elRelease = $('release');
+    const elDesc = $('desc');
+    const elCount = $('count');
+    const elLed = $('led');
+    const elInput = $('searchInput');
+    const elPrev = $('prev');
 
-        // Returns the parsed JSON, or null when the API says 404.
-        async function getJson(url) {
-            var res = await fetch(url);
-            if (res.status === 404) return null;
-            if (!res.ok) throw new Error('HTTP ' + res.status);
-            return res.json();
+    async function getJson(url) {
+      const res = await fetch(url);
+      if (res.status === 404) return null;
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }
+
+    function joinNames(arr, key) {
+      return (arr || []).map((x) => x[key]).filter(Boolean).join(', ');
+    }
+
+    function englishDescription(d) {
+      const list = d.descriptions || [];
+      const en = list.find((x) => x.language === 'en_us')
+        || list.find((x) => (x.language || '').startsWith('en'));
+      return en ? en.description : '';
+    }
+
+    function setLed(on) {
+      elLed.classList.toggle('on', on);
+    }
+
+    function showMessage(text) {
+      setLed(false);
+      elCard.hidden = true;
+      elMessage.hidden = false;
+      elMessage.textContent = text;
+    }
+
+    function render(d) {
+      current = d;
+      elMessage.hidden = true;
+      elCard.hidden = false;
+
+      elNumber.textContent = 'No. ' + String(d.id).padStart(4, '0');
+      elName.textContent = d.name;
+      elLevel.textContent = d.levels && d.levels[0] ? d.levels[0].level : 'Unknown';
+      elType.textContent = joinNames(d.types, 'type') || '—';
+      elAttribute.textContent = joinNames(d.attributes, 'attribute') || '—';
+      elRelease.textContent = d.releaseDate || '—';
+      elDesc.textContent = englishDescription(d);
+      elDesc.scrollTop = 0;
+      elPrev.disabled = d.id <= 1;
+
+      const src = d.images && d.images[0] ? d.images[0].href : '';
+      elImage.alt = d.name;
+
+      function reveal() {
+        setLed(false);
+        elImage.style.visibility = 'visible';
+      }
+
+      if (!src) {
+        setLed(false);
+        elImage.style.visibility = 'hidden';
+        return;
+      }
+      if (elImage.getAttribute('src') === src) {
+        reveal();
+        return;
+      }
+
+      setLed(true);
+      elImage.style.visibility = 'hidden';
+      elImage.onload = reveal;
+      elImage.onerror = () => {
+        setLed(false);
+        elImage.style.visibility = 'visible';
+      };
+      elImage.src = src;
+    }
+
+    async function findDigimon(q) {
+      const d = await getJson(API + '/' + encodeURIComponent(q));
+      if (d && d.id) return d;
+      if (/^\d+$/.test(q)) return null;
+
+      const list = await getJson(API + '?name=' + encodeURIComponent(q) + '&pageSize=1');
+      const items = list ? (Array.isArray(list) ? list : list.content) : [];
+      if (items && items[0] && items[0].id) {
+        const found = await getJson(API + '/' + items[0].id);
+        if (found && found.id) return found;
+      }
+      return null;
+    }
+
+    async function search() {
+      const q = elInput.value.trim();
+      if (!q) return;
+
+      const mine = ++token;
+      setLed(true);
+      try {
+        const d = await findDigimon(q);
+        if (mine !== token) return;
+        if (!d) {
+          showMessage('No match for "' + q + '". Try another name, or an ID number.');
+          return;
         }
+        render(d);
+      } catch (err) {
+        if (mine === token) showMessage(NETWORK_ERROR);
+      }
+    }
 
-        function joinNames(arr, key) {
-            return (arr || []).map(function (x) { return x[key]; }).filter(Boolean).join(', ');
+    async function step(dir) {
+      const startId = current ? current.id : 0;
+      if (dir < 0 && startId <= 1) return;
+
+      const mine = ++token;
+      setLed(true);
+      try {
+        for (let i = 1; i <= 5; i++) {
+          const id = startId + dir * i;
+          if (id < 1) break;
+          const d = await getJson(API + '/' + id);
+          if (mine !== token) return;
+          if (d && d.id) { render(d); return; }
         }
-
-        function englishDescription(d) {
-            var list = d.descriptions || [];
-            var en = list.find(function (x) { return x.language === 'en_us'; })
-                || list.find(function (x) { return (x.language || '').indexOf('en') === 0; });
-            return en ? en.description : '';
+        if (dir > 0) {
+          const first = await getJson(API + '/1');
+          if (mine !== token) return;
+          if (first && first.id) { render(first); return; }
         }
+        setLed(false);
+      } catch (err) {
+        if (mine === token) showMessage(NETWORK_ERROR);
+      }
+    }
 
-        function showMessage(text) {
-            elLed.classList.remove('on');
-            elCard.hidden = true;
-            elMessage.hidden = false;
-            elMessage.textContent = text;
-        }
+    $('searchForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      search();
+    });
+    elPrev.addEventListener('click', () => step(-1));
+    $('next').addEventListener('click', () => step(1));
 
-        // ---------- rendering ----------
+    $('year').textContent = new Date().getFullYear();
 
-        function render(d) {
-            current = d;
-            elMessage.hidden = true;
-            elCard.hidden = false;
-
-            elNumber.textContent = 'No. ' + String(d.id).padStart(4, '0');
-            elLevel.textContent = d.levels && d.levels[0] ? d.levels[0].level : 'Unknown';
-            elType.textContent = joinNames(d.types, 'type') || '—';
-            elAttribute.textContent = joinNames(d.attributes, 'attribute') || '—';
-            elRelease.textContent = d.releaseDate || '—';
-            elDesc.textContent = englishDescription(d);
-            elDesc.scrollTop = 0;
-            elPrev.disabled = d.id <= 1;
-
-            // Play the scan-in only once the new image is ready, so the
-            // previous Digimon's picture never flashes on screen.
-            var src = d.images && d.images[0] ? d.images[0].href : '';
-            elImage.alt = d.name; // kept for screen readers; not shown on screen
-
-            function reveal() {
-                elLed.classList.remove('on');
-                elImage.style.visibility = 'visible';
-                elPortrait.classList.remove('scan');
-                void elPortrait.offsetWidth;
-                elPortrait.classList.add('scan');
-            }
-
-            if (!src) {
-                elLed.classList.remove('on');
-                elImage.style.visibility = 'hidden';
-                return;
-            }
-            if (elImage.getAttribute('src') === src) {
-                reveal();
-                return;
-            }
-
-            elLed.classList.add('on');
-            elImage.style.visibility = 'hidden';
-            elPortrait.classList.remove('scan');
-            elImage.onload = reveal;
-            elImage.onerror = function () {
-                elLed.classList.remove('on');
-                elImage.style.visibility = 'visible';
-            };
-            elImage.src = src;
-        }
-
-        // ---------- lookups ----------
-
-        // Name or ID. Tries an exact lookup first, then a similar-name search.
-        async function findDigimon(q) {
-            var d = await getJson(API + '/' + encodeURIComponent(q));
-            if (d && d.id) return d;
-            if (/^\d+$/.test(q)) return null;
-
-            var list = await getJson(API + '?name=' + encodeURIComponent(q) + '&pageSize=1');
-            var items = list ? (Array.isArray(list) ? list : list.content) : [];
-            if (items && items[0] && items[0].id) {
-                var found = await getJson(API + '/' + items[0].id);
-                if (found && found.id) return found;
-            }
-            return null;
-        }
-
-        async function search() {
-            var q = elInput.value.trim();
-            if (!q) return;
-
-            var mine = ++token;
-            elLed.classList.add('on');
-            try {
-                var d = await findDigimon(q);
-                if (mine !== token) return;
-                if (!d) {
-                    showMessage('No match for "' + q + '". Try another name, or an ID number.');
-                    return;
-                }
-                render(d);
-            } catch (err) {
-                if (mine === token) showMessage('Could not reach the Digimon API. Check your connection and try again.');
-            }
-        }
-
-        // Steps through IDs, skipping a few gaps if some IDs don't exist.
-        async function step(dir) {
-            var startId = current ? current.id : 0;
-            if (dir < 0 && startId <= 1) return;
-
-            var mine = ++token;
-            elLed.classList.add('on');
-            try {
-                for (var i = 1; i <= 5; i++) {
-                    var id = startId + dir * i;
-                    if (id < 1) break;
-                    var d = await getJson(API + '/' + id);
-                    if (mine !== token) return;
-                    if (d && d.id) { render(d); return; }
-                }
-                if (dir > 0) { // ran past the end: wrap to the first one
-                    var first = await getJson(API + '/1');
-                    if (mine !== token) return;
-                    if (first && first.id) { render(first); return; }
-                }
-                elLed.classList.remove('on');
-            } catch (err) {
-                if (mine === token) showMessage('Could not reach the Digimon API. Check your connection and try again.');
-            }
-        }
-
-        // ---------- events ----------
-
-        document.getElementById('searchForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            search();
-        });
-        elPrev.addEventListener('click', function () { step(-1); });
-        document.getElementById('next').addEventListener('click', function () { step(1); });
-
-        // ---------- start ----------
-
-        (async function init() {
-            showMessage('Type a name or ID, then press Scan. Or use Next to browse.');
-            try {
-                var info = await getJson(API + '?pageSize=1');
-                var total = info && info.pageable && info.pageable.totalElements;
-                if (total) elCount.textContent = total.toLocaleString() + ' Digimon';
-            } catch (err) {
-                /* the count is optional */
-            }
-        })();
-    </script>
+    (async function init() {
+      showMessage('Type a name or ID, then press Scan. Or use Next to browse.');
+      try {
+        const info = await getJson(API + '?pageSize=1');
+        const total = info && info.pageable && info.pageable.totalElements;
+        if (total) elCount.textContent = total.toLocaleString() + ' Digimon';
+      } catch (err) { }
+    })();
+  </script>
 </body>
 
 </html>
