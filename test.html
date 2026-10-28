@@ -1,267 +1,342 @@
 <!doctype html>
-<html lang="en" data-bs-theme="light">
+<html lang="en">
 
 <head>
-  <title>Stardew Valley Bachelors & Bachelorettes</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DigiDex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Stops the page shifting when a scrollbar appears */
+        html {
+            overflow-y: scroll;
+        }
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
-  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&display=swap" rel="stylesheet" />
+        /* Keep the device the same size for every Digimon */
+        .lcd {
+            display: flex;
+            flex-direction: column;
+            height: 580px;
+            min-height: 0;
+        }
 
-  <style>
-    :root {
-      --parchment: #fff4d6;
-      --parchment-dark: #f3deaa;
-      --wood: #8b5a2b;
-      --wood-dark: #5c3a1a;
-      --ink: #3b2a1a;
-    }
+        .desc {
+            flex: 1;
+            /* takes whatever height is left */
+            min-height: 0;
+            margin: 14px 0 0;
+            padding-right: 4px;
+            overflow-y: auto;
+            font-size: .85rem;
+            line-height: 1.5;
 
-    body {
-      background: url('images/Stardew\ valley.jpg') center / cover no-repeat fixed;
-      font-family: system-ui, sans-serif;
-      font-size: 16px;
-      color: var(--ink);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      /* lets the footer sit at the bottom */
-    }
+            /* Firefox */
+            scrollbar-width: thin;
+            scrollbar-color: #2b3a28 rgba(43, 58, 40, .15);
+        }
 
-    /* sticky header: stays at the top while you scroll */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 1030;
-      /* stays above the cards */
-      background: var(--wood);
-      border-bottom: 4px solid var(--wood-dark);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
-    }
+        /* Chrome, Edge, Safari: a slim, square LCD-style scrollbar */
+        .desc::-webkit-scrollbar {
+            width: 8px;
+        }
 
-    .site-header .page-title {
-      margin: 0;
-      font-family: 'Pixelify Sans', sans-serif;
-      font-weight: 700;
-      font-size: clamp(1.1rem, 3vw, 1.8rem);
-      color: var(--parchment);
-      text-shadow: 2px 2px 0 var(--wood-dark);
-    }
+        .desc::-webkit-scrollbar-track {
+            background: rgba(43, 58, 40, .15);
+            border-left: 1px solid rgba(43, 58, 40, .35);
+        }
 
-    .btn-portfolio {
-      font-weight: 600;
-      font-size: .9rem;
-      white-space: nowrap;
-      color: var(--wood-dark);
-      background: #ffc933;
-      border: 2px solid var(--wood-dark);
-      border-radius: .5rem;
-      padding: .3rem .8rem;
-      text-decoration: none;
-    }
+        .desc::-webkit-scrollbar-thumb {
+            background: #2b3a28;
+            border: 1px solid #b9c8a0;
+            /* gap so the thumb looks inset */
+            border-radius: 0;
+        }
 
-    .btn-portfolio:hover {
-      background: #ffd95e;
-      color: var(--wood-dark);
-    }
+        .desc::-webkit-scrollbar-thumb:hover {
+            background: #1a2418;
+        }
 
-    /* footer: pushed to the bottom even when the page is short */
-    .site-footer {
-      background: var(--wood);
-      border-top: 4px solid var(--wood-dark);
-      color: var(--parchment);
-      font-size: .9rem;
-      text-align: center;
-      padding: 1rem;
-    }
+        .desc::-webkit-scrollbar-button {
+            display: none;
+            /* removes the arrow buttons */
+        }
 
-    .site-footer a {
-      color: #ffc933;
-    }
+        #card {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            min-height: 0;
+        }
 
-    /* card: solid parchment so text is always readable.
-       The old landscape image is kept only as a faint texture at the bottom. */
-    .stardew-card {
-      position: relative;
-      overflow: hidden;
-      background:
-        linear-gradient(rgba(255, 244, 214, .93), rgba(255, 244, 214, .93)),
-        url('images/Cardbg.png') bottom / cover no-repeat;
-      border: 4px solid var(--wood);
-      outline: 2px solid var(--parchment-dark);
-      outline-offset: -8px;
-      border-radius: 1rem;
-      box-shadow: 0 6px 0 var(--wood-dark), 0 12px 24px rgba(0, 0, 0, .3);
-      transition: transform .15s ease, box-shadow .15s ease;
-    }
+        /* Type / Attribute / Released rows */
+        .info {
+            margin: 14px 0 0;
+            padding: 0;
+        }
 
-    .stardew-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 0 var(--wood-dark), 0 18px 28px rgba(0, 0, 0, .35);
-    }
+        .info div {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 0;
+            border-top: 1px dashed currentColor;
+            font-size: .95rem;
+        }
 
-    .portrait {
-      width: 180px;
-      aspect-ratio: 1 / 1;
-      background: url('images/frame.png') center / 100% 100% no-repeat;
-      image-rendering: pixelated;
-    }
+        .info dt {
+            opacity: .7;
+        }
 
-    .portrait img {
-      object-fit: contain;
-      image-rendering: pixelated;
-    }
+        .info dd {
+            margin: 0;
+            text-align: right;
+        }
 
-    .char-name {
-      font-family: 'Pixelify Sans', sans-serif;
-      font-weight: 700;
-      font-size: 1.75rem;
-      line-height: 1.1;
-      color: var(--wood-dark);
-    }
-
-    .type-badge {
-      font-size: .75rem;
-      font-weight: 600;
-      letter-spacing: .03em;
-      padding: .35em .75em;
-      border-radius: 999px;
-      border: 2px solid var(--wood-dark);
-      color: #fff;
-      white-space: nowrap;
-    }
-
-    .type-bachelor {
-      background: #3a7ca5;
-    }
-
-    .type-bachelorette {
-      background: #c2527a;
-    }
-
-    .meta {
-      font-size: .9rem;
-      color: #7a5a3a;
-    }
-
-    .meta-row {
-      display: flex;
-      gap: .4rem;
-      align-items: baseline;
-    }
-
-    .meta-label {
-      font-weight: 700;
-      color: var(--wood);
-      min-width: 4.2rem;
-    }
-
-    .desc {
-      line-height: 1.5;
-    }
-
-    .gifts-title {
-      font-family: 'Pixelify Sans', sans-serif;
-      font-weight: 700;
-      color: var(--wood-dark);
-      border-bottom: 2px dashed var(--wood);
-      padding-bottom: .25rem;
-      margin-bottom: .5rem;
-    }
-
-    .gift {
-      display: inline-block;
-      margin: 0 .3rem .4rem 0;
-      padding: .2em .65em;
-      font-size: .8rem;
-      color: var(--ink);
-      background: #fff;
-      border: 2px solid var(--parchment-dark);
-      border-radius: .5rem;
-    }
-  </style>
+        .btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 
 <body>
-  <header class="site-header">
-    <div class="container d-flex justify-content-between align-items-center gap-3 py-2">
-      <h1 class="page-title">Stardew Valley Bachelors &amp; Bachelorettes</h1>
-      <a href="../index.html" class="btn-portfolio">&larr; Portfolio</a>
-    </div>
-  </header>
+    <main class="device">
+        <div class="device-head">
+            <h1>DigiDex</h1>
+            <div class="led" id="led" aria-hidden="true"></div>
+        </div>
 
-  <main class="container py-5">
-    <div class="row g-4" id="parent"></div>
-  </main>
+        <form class="search" id="searchForm" autocomplete="off">
+            <input type="text" id="searchInput" aria-label="Digimon name or ID number"
+                placeholder="Name or ID, like Agumon or 1">
+            <button type="submit" class="btn">Scan</button>
+        </form>
 
-  <footer class="site-footer mt-auto">
-    <div class="container">
-      Fan-made page &middot; Stardew Valley &copy; ConcernedApe &middot;
-      <a href="../index.html">Back to Portfolio</a>
-    </div>
-  </footer>
+        <div class="bezel">
+            <div class="lcd" aria-live="polite">
+                <div id="message" class="message">Loading...</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-    crossorigin="anonymous"></script>
-
-  <script>
-    var elParent = document.getElementById("parent");
-
-    fetch("people.json")
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (people) {
-        var html = "";
-
-        for (var i = 0; i < people.length; i++) {
-          var gifts = "";
-          var image = "";
-          var typeClass = String(people[i].type).toLowerCase() === "bachelorette"
-            ? "type-bachelorette"
-            : "type-bachelor";
-
-          if (people[i].image) {
-            image = `<div class="portrait mx-auto mb-3 p-3">
-                <img src="` + people[i].image + `" alt="Portrait of ` + people[i].name + `"
-                  class="w-100 h-100" onerror="this.style.display='none'">
-              </div>`;
-          }
-
-          for (var j = 0; j < people[i].lovedGifts.length; j++) {
-            gifts += `<span class="gift">` + people[i].lovedGifts[j] + `</span>`;
-          }
-
-          html +=
-            `<div class="col-12 col-md-6 col-lg-4">
-              <div class="stardew-card p-4 h-100 d-flex flex-column">
-                ` + image + `
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                  <div class="char-name">` + people[i].name + `</div>
-                  <span class="type-badge ` + typeClass + `">` + people[i].type + `</span>
+                <div id="card" hidden>
+                    <div class="lcd-top">
+                        <span id="number"></span>
+                        <span id="level"></span>
+                    </div>
+                    <div class="portrait" id="portrait">
+                        <img id="image" alt="">
+                    </div>
+                    <dl class="info">
+                        <div>
+                            <dt>Type</dt>
+                            <dd id="type"></dd>
+                        </div>
+                        <div>
+                            <dt>Attribute</dt>
+                            <dd id="attribute"></dd>
+                        </div>
+                        <div>
+                            <dt>Released</dt>
+                            <dd id="release"></dd>
+                        </div>
+                    </dl>
+                    <p class="desc" id="desc"></p>
                 </div>
-                <div class="meta mt-2">
-                  <div class="meta-row"><span class="meta-label">Birthday</span><span>` + people[i].birthday + `</span></div>
-                  <div class="meta-row"><span class="meta-label">Home</span><span>` + people[i].home + `</span></div>
-                </div>
-                <div class="desc mt-3">` + people[i].description + `</div>
-                <div class="mt-auto pt-3">
-                  <div class="gifts-title">Loved gifts</div>
-                  ` + gifts + `
-                </div>
-              </div>
-            </div>`;
+            </div>
+        </div>
+
+        <div class="browse">
+            <button type="button" class="btn" id="prev" aria-label="Previous Digimon" disabled>Previous</button>
+            <span class="count" id="count"></span>
+            <button type="button" class="btn" id="next" aria-label="Next Digimon">Next</button>
+        </div>
+    </main>
+
+    <script>
+        const API = 'https://digi-api.com/api/v1/digimon';
+
+        var current = null; // the Digimon on screen
+        var token = 0;      // lets newer requests cancel older ones
+
+        var elMessage = document.getElementById('message');
+        var elCard = document.getElementById('card');
+        var elNumber = document.getElementById('number');
+        var elLevel = document.getElementById('level');
+        var elPortrait = document.getElementById('portrait');
+        var elImage = document.getElementById('image');
+        var elType = document.getElementById('type');
+        var elAttribute = document.getElementById('attribute');
+        var elRelease = document.getElementById('release');
+        var elDesc = document.getElementById('desc');
+        var elCount = document.getElementById('count');
+        var elLed = document.getElementById('led');
+        var elInput = document.getElementById('searchInput');
+        var elPrev = document.getElementById('prev');
+
+        // ---------- helpers ----------
+
+        // Returns the parsed JSON, or null when the API says 404.
+        async function getJson(url) {
+            var res = await fetch(url);
+            if (res.status === 404) return null;
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
         }
 
-        elParent.innerHTML = html;
-      })
-      .catch(function (error) {
-        elParent.innerHTML = `<div class="alert alert-danger">Could not load people.json: ` + error + `</div>`;
-      });
-  </script>
+        function joinNames(arr, key) {
+            return (arr || []).map(function (x) { return x[key]; }).filter(Boolean).join(', ');
+        }
+
+        function englishDescription(d) {
+            var list = d.descriptions || [];
+            var en = list.find(function (x) { return x.language === 'en_us'; })
+                || list.find(function (x) { return (x.language || '').indexOf('en') === 0; });
+            return en ? en.description : '';
+        }
+
+        function showMessage(text) {
+            elLed.classList.remove('on');
+            elCard.hidden = true;
+            elMessage.hidden = false;
+            elMessage.textContent = text;
+        }
+
+        // ---------- rendering ----------
+
+        function render(d) {
+            current = d;
+            elMessage.hidden = true;
+            elCard.hidden = false;
+
+            elNumber.textContent = 'No. ' + String(d.id).padStart(4, '0');
+            elLevel.textContent = d.levels && d.levels[0] ? d.levels[0].level : 'Unknown';
+            elType.textContent = joinNames(d.types, 'type') || '—';
+            elAttribute.textContent = joinNames(d.attributes, 'attribute') || '—';
+            elRelease.textContent = d.releaseDate || '—';
+            elDesc.textContent = englishDescription(d);
+            elDesc.scrollTop = 0;
+            elPrev.disabled = d.id <= 1;
+
+            // Play the scan-in only once the new image is ready, so the
+            // previous Digimon's picture never flashes on screen.
+            var src = d.images && d.images[0] ? d.images[0].href : '';
+            elImage.alt = d.name; // kept for screen readers; not shown on screen
+
+            function reveal() {
+                elLed.classList.remove('on');
+                elImage.style.visibility = 'visible';
+                elPortrait.classList.remove('scan');
+                void elPortrait.offsetWidth;
+                elPortrait.classList.add('scan');
+            }
+
+            if (!src) {
+                elLed.classList.remove('on');
+                elImage.style.visibility = 'hidden';
+                return;
+            }
+            if (elImage.getAttribute('src') === src) {
+                reveal();
+                return;
+            }
+
+            elLed.classList.add('on');
+            elImage.style.visibility = 'hidden';
+            elPortrait.classList.remove('scan');
+            elImage.onload = reveal;
+            elImage.onerror = function () {
+                elLed.classList.remove('on');
+                elImage.style.visibility = 'visible';
+            };
+            elImage.src = src;
+        }
+
+        // ---------- lookups ----------
+
+        // Name or ID. Tries an exact lookup first, then a similar-name search.
+        async function findDigimon(q) {
+            var d = await getJson(API + '/' + encodeURIComponent(q));
+            if (d && d.id) return d;
+            if (/^\d+$/.test(q)) return null;
+
+            var list = await getJson(API + '?name=' + encodeURIComponent(q) + '&pageSize=1');
+            var items = list ? (Array.isArray(list) ? list : list.content) : [];
+            if (items && items[0] && items[0].id) {
+                var found = await getJson(API + '/' + items[0].id);
+                if (found && found.id) return found;
+            }
+            return null;
+        }
+
+        async function search() {
+            var q = elInput.value.trim();
+            if (!q) return;
+
+            var mine = ++token;
+            elLed.classList.add('on');
+            try {
+                var d = await findDigimon(q);
+                if (mine !== token) return;
+                if (!d) {
+                    showMessage('No match for "' + q + '". Try another name, or an ID number.');
+                    return;
+                }
+                render(d);
+            } catch (err) {
+                if (mine === token) showMessage('Could not reach the Digimon API. Check your connection and try again.');
+            }
+        }
+
+        // Steps through IDs, skipping a few gaps if some IDs don't exist.
+        async function step(dir) {
+            var startId = current ? current.id : 0;
+            if (dir < 0 && startId <= 1) return;
+
+            var mine = ++token;
+            elLed.classList.add('on');
+            try {
+                for (var i = 1; i <= 5; i++) {
+                    var id = startId + dir * i;
+                    if (id < 1) break;
+                    var d = await getJson(API + '/' + id);
+                    if (mine !== token) return;
+                    if (d && d.id) { render(d); return; }
+                }
+                if (dir > 0) { // ran past the end: wrap to the first one
+                    var first = await getJson(API + '/1');
+                    if (mine !== token) return;
+                    if (first && first.id) { render(first); return; }
+                }
+                elLed.classList.remove('on');
+            } catch (err) {
+                if (mine === token) showMessage('Could not reach the Digimon API. Check your connection and try again.');
+            }
+        }
+
+        // ---------- events ----------
+
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            search();
+        });
+        elPrev.addEventListener('click', function () { step(-1); });
+        document.getElementById('next').addEventListener('click', function () { step(1); });
+
+        // ---------- start ----------
+
+        (async function init() {
+            showMessage('Type a name or ID, then press Scan. Or use Next to browse.');
+            try {
+                var info = await getJson(API + '?pageSize=1');
+                var total = info && info.pageable && info.pageable.totalElements;
+                if (total) elCount.textContent = total.toLocaleString() + ' Digimon';
+            } catch (err) {
+                /* the count is optional */
+            }
+        })();
+    </script>
 </body>
 
 </html>
